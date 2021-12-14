@@ -10,6 +10,8 @@ services:
     volumes:
       - .:/app
       - go-pkg/:/go
+    depends_on:
+      - db
 
   db:
     image: postgres:13
