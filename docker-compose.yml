@@ -10,5 +10,16 @@ services:
     volumes:
       - .:/app
       - go-pkg/:/go
+
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: docker
+      POSTGRES_DB: docker
+      POSTGRES_PASSWORD: docker
+      PGDATA : /var/lib/postgresql/data
+    volumes:
+      - pg-data:/var/lib/postgresql/data
 volumes:
   go-pkg:
+  pg-data:
