@@ -23,6 +23,9 @@ func main() {
 	r.Route("/challenges", func(r chi.Router) {
 		c := controllers.Challenges{}
 		r.Post("/", c.Create)
+		r.Get("/", c.Index)
+		r.Get("/{id}", c.Show)
+		r.Delete("/{id}", c.Destroy)
 	})
 
 	http.ListenAndServe(":3000", r)
