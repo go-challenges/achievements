@@ -20,6 +20,8 @@ func Render(w http.ResponseWriter, status int, data interface{}) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS")
 	w.WriteHeader(status)
 	w.Write(jsonData)
 }
