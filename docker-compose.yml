@@ -24,4 +24,4 @@ services:
       - pg-data:/var/lib/postgresql/data
 volumes:
   go-pkg:
-  pg-data:
+  pg-data:  
