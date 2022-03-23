@@ -81,7 +81,7 @@ updated_at
 delete_at
 name
 description
-state (active, ended)
+state (in_moderation, active, ended)
 type
 rules (????)
 schedule (???)
