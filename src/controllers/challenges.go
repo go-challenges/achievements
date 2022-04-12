@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/jinzhu/copier"
 	"gorm.io/gorm/clause"
 )
 
@@ -18,9 +19,9 @@ func (c *Challenges) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	challange := models.Challenge{Name: form.Name, Description: form.Description}
-	//challange := models.Challenge{}
-	//copier.Copy(&challange, &form)
+	//challange := models.Challenge{Name: form.Name, Description: form.Description}
+	challange := models.Challenge{}
+	copier.Copy(&challange, &form)
 
 	if result := models.DB.Create(&challange); result.Error != nil {
 		http.Error(w, http.StatusText(422), 422)
