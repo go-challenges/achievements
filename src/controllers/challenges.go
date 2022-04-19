@@ -3,6 +3,7 @@ package controllers
 import (
 	"achievements/src/forms"
 	"achievements/src/models"
+	"fmt"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
@@ -13,22 +14,24 @@ import (
 type Challenges struct{}
 
 func (c *Challenges) Create(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Shit for test")
 	form := forms.Challenge{}
 	if err := form.Bind(r); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	//challange := models.Challenge{Name: form.Name, Description: form.Description}
-	challange := models.Challenge{}
-	copier.Copy(&challange, &form)
+	//chal := models.Challenge{Name: form.Name, Description: form.Description}
+	challenge := models.Challenge{}
+	copier.Copy(&challenge, &form)
 
-	if result := models.DB.Create(&challange); result.Error != nil {
+	if err := challenge.Create(); err != nil {
+		fmt.Println("Shit for db")
 		http.Error(w, http.StatusText(422), 422)
 		return
 	}
 
-	Render(w, 201, challange)
+	Render(w, 201, challenge)
 }
 
 func (c *Challenges) Index(w http.ResponseWriter, r *http.Request) {

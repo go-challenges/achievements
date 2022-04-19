@@ -19,3 +19,16 @@ type Challenge struct {
 	Type        string         `gorm:"type:challenge_types;default:number;" json:"type"`
 	Properties  helpers.JSONB  `gorm:"type:jsonb" json:"properties,omitempty"`
 }
+
+type ChallengeRepository interface {
+	Create() error
+}
+
+func (c *Challenge) Create() error {
+	err := DB.Create(c)
+	if err != nil {
+		return err.Error
+	}
+
+	return nil
+}
