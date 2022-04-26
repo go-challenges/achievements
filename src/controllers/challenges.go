@@ -3,6 +3,7 @@ package controllers
 import (
 	"achievements/src/forms"
 	"achievements/src/models"
+	"achievements/src/repository"
 	"fmt"
 	"net/http"
 
@@ -11,10 +12,17 @@ import (
 	"gorm.io/gorm/clause"
 )
 
-type Challenges struct{}
+type Challenges struct {
+	repository repository.ChallengesRepository
+}
+
+func ChallengesWrapper(ChallRepo repository.ChallengesRepository) *Challenges {
+	return &Challenges{
+		repository: ChallRepo,
+	}
+}
 
 func (c *Challenges) Create(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Shit for test")
 	form := forms.Challenge{}
 	if err := form.Bind(r); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -25,7 +33,7 @@ func (c *Challenges) Create(w http.ResponseWriter, r *http.Request) {
 	challenge := models.Challenge{}
 	copier.Copy(&challenge, &form)
 
-	if err := challenge.Create(); err != nil {
+	if err := c.repository.Create(&challenge); err != nil {
 		fmt.Println("Shit for db")
 		http.Error(w, http.StatusText(422), 422)
 		return

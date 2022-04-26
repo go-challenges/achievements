@@ -6,6 +6,11 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"achievements/src/models"
+	mock_repository "achievements/src/repository/mock"
+
+	"github.com/golang/mock/gomock"
 )
 
 func TestChallenges_Create(t *testing.T) {
@@ -19,17 +24,19 @@ func TestChallenges_Create(t *testing.T) {
 		"description": "descrition 12",
 	}
 	json_stub, _ := json.Marshal(stub_body)
-	//mockCtrl := gomock.NewController(t)
-	//challenge_stub := mock_models.NewMockChallengeRepository(mockCtrl)
+	mockCtrl := gomock.NewController(t)
+	mockRepo := mock_repository.NewMockChallengesRepository(mockCtrl)
 
 	tests := []struct {
-		name string
-		c    *Challenges
-		args args
+		name    string
+		c       *Challenges
+		useStab bool
+		args    args
 	}{
 		{
 			"return a error during body parse",
 			&Challenges{},
+			false,
 			args{
 				httptest.NewRecorder(),
 				httptest.NewRequest(http.MethodPost, "/challenges", bytes.NewBuffer([]byte{})),
@@ -38,7 +45,8 @@ func TestChallenges_Create(t *testing.T) {
 		},
 		{
 			"return created",
-			&Challenges{},
+			ChallengesWrapper(mockRepo),
+			true,
 			args{
 				httptest.NewRecorder(),
 				httptest.NewRequest(
@@ -53,7 +61,16 @@ func TestChallenges_Create(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			c := &Challenges{}
+			c := tt.c
+
+			if tt.useStab {
+				challenge := models.Challenge{
+					Name:        "challenge 12",
+					Description: "descrition 12",
+				}
+				mockRepo.EXPECT().Create(&challenge).Return(nil)
+			}
+
 			c.Create(tt.args.w, tt.args.r)
 
 			if tt.args.w.Code != tt.args.code {

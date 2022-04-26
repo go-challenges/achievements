@@ -20,10 +20,6 @@ type Challenge struct {
 	Properties  helpers.JSONB  `gorm:"type:jsonb" json:"properties,omitempty"`
 }
 
-type ChallengeRepository interface {
-	Create() error
-}
-
 func (c *Challenge) Create() error {
 	err := DB.Create(c)
 	if err != nil {

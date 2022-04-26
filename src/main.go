@@ -3,6 +3,7 @@ package main
 import (
 	"achievements/src/controllers"
 	"achievements/src/models"
+	"achievements/src/repository"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
@@ -33,7 +34,7 @@ func main() {
 		w.Write([]byte("Hello, World!"))
 	})
 	r.Route("/challenges", func(r chi.Router) {
-		c := controllers.Challenges{}
+		c := controllers.ChallengesWrapper(repository.NewChallengeRepository())
 		r.Post("/", c.Create)
 		r.Get("/", c.Index)
 		r.Get("/{id}", c.Show)
