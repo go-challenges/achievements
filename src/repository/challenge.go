@@ -15,9 +15,21 @@ func NewChallengeRepository() *ChallengeRepository {
 }
 
 func (r *ChallengeRepository) Create(challenge *models.Challenge) error {
-	err := models.DB.Create(challenge)
-	if err != nil {
-		return err.Error
+	result := models.DB.Create(challenge)
+	if result.Error != nil {
+		return result.Error
+	}
+
+	user := models.CurrentUser()
+
+	userChallenge := models.UserChallenge{
+		UserID:      user.ID,
+		ChallengeID: challenge.ID,
+	}
+
+	errUserChallenge := userChallenge.Create()
+	if errUserChallenge != nil {
+		return errUserChallenge
 	}
 
 	return nil

@@ -4,11 +4,10 @@ import (
 	"achievements/src/forms"
 	"achievements/src/models"
 	"achievements/src/repository"
-	"fmt"
+	"achievements/src/services"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/jinzhu/copier"
 	"gorm.io/gorm/clause"
 )
 
@@ -29,12 +28,8 @@ func (c *Challenges) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//chal := models.Challenge{Name: form.Name, Description: form.Description}
-	challenge := models.Challenge{}
-	copier.Copy(&challenge, &form)
-
-	if err := c.repository.Create(&challenge); err != nil {
-		fmt.Println("Shit for db")
+	challenge, err := services.CreateChallenge(&form, c.repository)
+	if err != nil {
 		http.Error(w, http.StatusText(422), 422)
 		return
 	}
