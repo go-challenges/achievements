@@ -10,6 +10,9 @@ type UserChallenge struct {
 	ChallengeID int        `json:"challenge_id"`
 	CreatedAt   *time.Time `json:"created_at"`
 	UpdatedAt   *time.Time `json:"updated_at"`
+	StartedAt   *time.Time `json:"started_at"`
+	FinishedAt  *time.Time `json:"finished_at"`
+	EndedAt     *time.Time `json:"ended_at"`
 }
 
 type Tabler interface {
